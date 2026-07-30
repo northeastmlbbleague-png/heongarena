@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HEONG ARENA</title>
+    <!-- Web App Manifest for PWA -->
+    <meta name="theme-color" content="#0b0c10">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --surface: rgba(30, 31, 38, 0.65);
+            --surface-hover: rgba(45, 47, 56, 0.85);
+            --primary: #6b46c1; /* Purple */
+            --secondary: #3182ce; /* Blue */
+            --accent: #d4af37; /* Gold */
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --danger: #e53e3e;
+            --success: #38a169;
+            --border: rgba(255, 255, 255, 0.1);
+            --font: 'Segoe UI', system-ui, sans-serif;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(107, 70, 193, 0.2), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(49, 130, 206, 0.2), transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: var(--nav-height); /* Space for bottom nav */
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-weight: 700; margin-bottom: 0.5rem; }
+        .text-accent { color: var(--accent); }
+        .text-gradient { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-muted { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* Auth Screen */
+        #auth-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 2rem; overflow-y: auto;
+        }
+        .auth-container { width: 100%; max-width: 400px; padding: 2rem; }
+        .auth-logo { text-align: center; font-size: 2rem; font-weight: 800; margin-bottom: 2rem; }
+        
+        /* Forms */
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: var(--text-muted); }
+        input, select, textarea {
+            width: 100%; padding: 0.8rem 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-main);
+            outline: none; transition: all 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+        
+        /* Buttons */
+        .btn {
+            width: 100%; padding: 1rem; border: none; border-radius: 12px; cursor: pointer;
+            font-weight: 600; font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-accent { background: var(--accent); color: var(--bg-color); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-sm { padding: 0.6rem 1rem; font-size: 0.9rem; width: auto; }
+        .btn-danger { background: rgba(229, 62, 62, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height);
+            display: flex; justify-content: space-around; align-items: center;
+            background: rgba(11, 12, 16, 0.85); backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border); z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--text-muted); text-decoration: none; font-size: 0.75rem; gap: 4px;
+            width: 20%; height: 100%; position: relative; cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; transition: transform 0.3s; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item.active svg { transform: translateY(-2px); }
+        .badge {
+            position: absolute; top: 8px; right: 25%; background: var(--danger);
+            color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 6px;
+            border-radius: 10px; display: none;
+        }
+
+        /* Views Container */
+        #main-app { display: none; }
+        .view-section { display: none; padding: 1rem; padding-top: 2rem; animation: fadeSlideUp 0.4s ease forwards; }
+        .view-section.active { display: block; }
+
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Layout Elements */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        
+        /* Cards */
+        .card { padding: 1rem; margin-bottom: 1rem; position: relative; overflow: hidden; }
+        .card-banner { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; background: #000; }
+        .card-title { font-size: 1.2rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .tid-badge { font-size: 0.75rem; background: rgba(212, 175, 55, 0.2); color: var(--accent); padding: 2px 8px; border-radius: 12px; }
+        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
+        .card-stat { display: flex; flex-direction: column; }
+        .card-stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .card-stat-value { font-weight: 600; font-size: 0.95rem; }
+        .status-badge {
+            position: absolute; top: 1.5rem; right: 1.5rem; padding: 0.3rem 0.8rem;
+            border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;
+            backdrop-filter: blur(5px);
+        }
+        .status-open { background: rgba(56, 161, 105, 0.8); color: white; }
+        .status-closed { background: rgba(229, 62, 62, 0.8); color: white; }
+        .status-full { background: rgba(212, 175, 55, 0.8); color: var(--bg-color); }
+        .status-pending { background: rgba(49, 130, 206, 0.8); color: white; }
+
+        /* Profile Specifics */
+        .profile-header { text-align: center; margin-bottom: 2rem; }
+        .profile-pic-container { position: relative; width: 100px; height: 100px; margin: 0 auto 1rem; }
+        .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        
+        /* Avatars */
+        .avatar-selector { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 1rem; }
+        .avatar-option { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+        .avatar-option:hover { transform: scale(1.1); }
+        .avatar-option.selected { border-color: var(--accent); box-shadow: 0 0 12px rgba(212, 175, 55, 0.4); }
+
+        /* Utilities */
+        .d-none { display: none !important; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .text-center { text-align: center; }
+
+        /* Slider */
+        .slider-container { display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 1rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .slider-container::-webkit-scrollbar { display: none; }
+        .slider-item { min-width: 85%; scroll-snap-align: center; }
+
+        /* Toast */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; }
+        .toast { padding: 1rem; border-radius: 12px; background: rgba(30,31,38,0.95); backdrop-filter: blur(10px); border-left: 4px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.5); color: white; font-size: 0.9rem; animation: slideDown 0.3s ease forwards; }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Loading Spinner */
+        .loader { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 2rem auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <!-- Auth Screen -->
+    <div id="auth-screen">
+        <div class="auth-container glass">
+            <h1 class="auth-logo text-gradient">HEONG ARENA</h1>
+
+            <!-- Sign Up Form (Visible by default) -->
+            <form id="form-signup" class="mb-1">
+                <h2 class="mb-1">Create Account</h2>
+                <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
+                <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="signup-password" required minlength="6"></div>
+                <button type="submit" class="btn btn-primary mb-1">Sign Up</button>
+                <div class="text-center text-muted">
+                    Already have an account? <a href="#" onclick="toggleAuth('login')" style="color:var(--accent);">Login</a>
+                </div>
+            </form>
+            
+            <!-- Login Form (Hidden by default) -->
+            <form id="form-login" class="mb-1 d-none">
+                <h2 class="mb-1">Welcome Back</h2>
+                <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="login-password" required></div>
+                <button type="submit" class="btn btn-primary mb-1">Login</button>
+                <div class="text-center text-muted">
+                    <a href="#" onclick="toggleAuth('signup')" style="color:var(--accent);">Create Account</a> | 
+                    <a href="#" onclick="toggleAuth('forgot')" style="color:var(--secondary);">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="form-forgot" class="mb-1 d-none">
+                <h2 class="mb-1">Reset Password</h2>
+                <div class="form-group"><label>Email</label><input type="email" id="forgot-email" required></div>
+                <button type="submit" class="btn btn-primary mb-1">Send Reset Link</button>
+                <div class="text-center text-muted">
+                    <a href="#" onclick="toggleAuth('login')" style="color:var(--accent);">Back to Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app">
+        
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view-section active">
+            <div class="section-header">
+                <h2><span class="text-gradient">HEONG ARENA</span> online</h2>
+            </div>
+            
+            <h4 class="text-accent mb-1">Announcements</h4>
+            <div id="home-announcements" class="mb-2">
+                <div class="loader"></div>
+            </div>
+
+            <h4 class="text-accent mb-1">Featured Tournaments</h4>
+            <div class="slider-container" id="home-featured-tournaments">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- TOURNAMENTS VIEW -->
+        <div id="view-tournaments" class="view-section">
+            <h2 class="text-gradient mb-1">Tournaments</h2>
+            <div class="form-group">
+                <input type="text" id="search-tournaments" placeholder="Search tournaments...">
+            </div>
+            <div id="tournaments-list">
+                <div class="loader"></div>
+            </div>
+        </div>
+
+        <!-- EVENTS VIEW -->
+        <div id="view-events" class="view-section">
+            <h2 class="text-gradient mb-1">Events & Extras</h2>
+            <div id="events-list">
+                <div class="loader"></div>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS VIEW -->
+        <div id="view-notifications" class="view-section">
+            <h2 class="text-gradient mb-1">Notifications</h2>
+            <div id="notifications-list">
+                <div class="loader"></div>
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div id="view-profile" class="view-section">
+            <div class="profile-header">
+                <div class="profile-pic-container">
+                    <img src="https://i.ibb.co/DfbJ93sw/1785417190933.png" id="display-pfp" class="profile-pic">
+                </div>
+                <h2 id="display-name">Loading...</h2>
+                <p class="text-muted" id="display-ign">@username</p>
+                <p class="text-accent" style="font-weight:bold;" id="display-uid">ID: -----</p>
+            </div>
+
+            <!-- Avatar Selection -->
+            <div class="card glass mb-2 text-center">
+                <h3 class="text-accent mb-1" style="font-size: 1rem;">Choose Your Role Avatar</h3>
+                <div class="avatar-selector">
+                    <img src="https://i.ibb.co/DfbJ93sw/1785417190933.png" class="avatar-option" alt="Assassin">
+                    <img src="https://i.ibb.co/tPqvD7TL/1785417348196.png" class="avatar-option" alt="Roam">
+                    <img src="https://i.ibb.co/QFgWD6Gb/1785417012882.png" class="avatar-option" alt="Fighter">
+                    <img src="https://i.ibb.co/wrs4KDqR/1785417103107.png" class="avatar-option" alt="Support">
+                    <img src="https://i.ibb.co/zHRRJBC0/1785417269498.png" class="avatar-option" alt="Marksman">
+                    <img src="https://i.ibb.co/HfR2qZNL/1785417426185.png" class="avatar-option" alt="Mage">
+                </div>
+            </div>
+
+            <form id="form-profile" class="card glass mb-2">
+                <h3 class="text-accent mb-1">Personal Info</h3>
+                <div class="form-group"><label>Full Name</label><input type="text" id="prof-name" required></div>
+                <div class="form-group"><label>Username</label><input type="text" id="prof-username"></div>
+                <div class="form-group"><label>Email (Read-only)</label><input type="email" id="prof-email" readonly></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" id="prof-phone"></div>
+                <div class="form-group"><label>Bio</label><textarea id="prof-bio" rows="2"></textarea></div>
+
+                <h3 class="text-accent mb-1 mt-2" style="margin-top:1.5rem;">MLBB Information</h3>
+                <div class="grid-2">
+                    <div class="form-group"><label>In-Game Name (IGN)</label><input type="text" id="prof-ign"></div>
+                    <div class="form-group"><label>Squad Name</label><input type="text" id="prof-squad"></div>
+                    <div class="form-group"><label>Player ID</label><input type="number" id="prof-pid"></div>
+                    <div class="form-group"><label>Zone ID</label><input type="number" id="prof-zid"></div>
+                    <div class="form-group"><label>Current Rank</label><input type="text" id="prof-crank"></div>
+                    <div class="form-group"><label>Highest Rank</label><input type="text" id="prof-hrank"></div>
+                    <div class="form-group">
+                        <label>Preferred Lane</label>
+                        <select id="prof-lane">
+                            <option value="">Select Lane</option>
+                            <option value="Gold Lane">Gold Lane</option>
+                            <option value="EXP Lane">EXP Lane</option>
+                            <option value="Mid Lane">Mid Lane</option>
+                            <option value="Jungle">Jungle</option>
+                            <option value="Roam">Roam</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Main Role</label>
+                        <select id="prof-role">
+                            <option value="">Select Role</option>
+                            <option value="Tank">Tank</option>
+                            <option value="Fighter">Fighter</option>
+                            <option value="Assassin">Assassin</option>
+                            <option value="Mage">Mage</option>
+                            <option value="Marksman">Marksman</option>
+                            <option value="Support">Support</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Main Hero</label><input type="text" id="prof-mhero"></div>
+                    <div class="form-group"><label>Secondary Hero</label><input type="text" id="prof-shero"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2" style="margin-top: 1rem;">Save Profile Changes</button>
+            </form>
+
+            <!-- Payments (Read Only) -->
+            <div class="card glass mb-2">
+                <h3 class="text-accent mb-1">My Registrations & Payments</h3>
+                <div id="user-payments-list"><p class="text-muted">No records found.</p></div>
+            </div>
+
+            <div class="card glass mb-2">
+                <h3 class="text-danger mb-1">Refund Policy</h3>
+                <p class="text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                    Refunds are available only if the registered team is unable to participate <strong>before their match begins</strong>.<br><br>
+                    If approved:<br>
+                    • Full refund for the entire team.<br>
+                    • Team is disqualified & registration cancelled.<br><br>
+                    <em>No refund will be provided if the team has already played a match.</em>
+                </p>
+            </div>
+
+            <button type="button" class="btn btn-danger mb-2" id="btn-logout">Logout Account</button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-target="view-home">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-tournaments">
+                <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+                <span>Play</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-events">
+                <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                <span>Events</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-notifications">
+                <div class="badge" id="notif-badge">0</div>
+                <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                <span>Notifs</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-profile">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Firebase SDK (Modular v10+) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getDatabase, ref, set, push, update, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // Exact Master Prompt Config
+        const firebaseConfig = {
+  apiKey: "AIzaSyDkKsLXM0lHN4uOIkMXd1gjTPOK0I3St-g",
+  authDomain: "heong-arena-online.firebaseapp.com",
+  projectId: "heong-arena-online",
+  storageBucket: "heong-arena-online.firebasestorage.app",
+  messagingSenderId: "182027151522",
+  appId: "1:182027151522:web:2e2848a97f97d5d6088ffb",
+  measurementId: "G-SHDX77PZ8Q"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        let currentUserUid = null;
+        let allTournaments = [];
+        let myRegistrations = {};
+
+        // Utilities
+        window.showToast = (msg, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        };
+
+        window.toggleAuth = (mode) => {
+            document.getElementById('form-login').classList.add('d-none');
+            document.getElementById('form-signup').classList.add('d-none');
+            document.getElementById('form-forgot').classList.add('d-none');
+            document.getElementById(`form-${mode}`).classList.remove('d-none');
+        };
+
+        // Consistent 5-digit ID Generator (Using Firebase push key hash)
+        function get5DigitId(key) {
+            let hash = 0;
+            for (let i = 0; i < key.length; i++) {
+                hash = key.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            hash = Math.abs(hash);
+            return (hash % 90000) + 10000; // Ensures result is between 10000 and 99999
+        }
+
+        // Navigation Setup
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+                
+                const targetId = item.getAttribute('data-target');
+                item.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+                
+                if(targetId === 'view-notifications') markNotificationsRead();
+            });
+        });
+
+        // Authentication Handlers
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value);
+                showToast("Login successful!");
+            } catch (error) { 
+                let errorMessage = error.message;
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-login-credentials') {
+                    errorMessage = "wrong password!";
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = "connection issue please wait";
+                }
+                showToast(errorMessage, 'error'); 
+            }
+        });
+
+        document.getElementById('form-signup').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const pass = document.getElementById('signup-password').value;
+            const name = document.getElementById('signup-name').value;
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                const randomUserId = Math.floor(10000 + Math.random() * 90000); // Generate Random 5-digit user id
+                await set(ref(db, `users/${cred.user.uid}`), {
+                    email: email,
+                    fullName: name,
+                    userId5: randomUserId,
+                    pfp: "https://i.ibb.co/DfbJ93sw/1785417190933.png", // Default avatar
+                    createdAt: new Date().toISOString()
+                });
+                showToast("Account created successfully!");
+            } catch (error) { 
+                let errorMessage = error.message;
+                if (error.code === 'auth/network-request-failed') {
+                    errorMessage = "connection issue please wait";
+                }
+                showToast(errorMessage, 'error'); 
+            }
+        });
+
+        document.getElementById('form-forgot').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await sendPasswordResetEmail(auth, document.getElementById('forgot-email').value);
+                showToast("Password reset link sent to email.");
+                toggleAuth('login');
+            } catch (error) { 
+                let errorMessage = error.message;
+                if (error.code === 'auth/network-request-failed') {
+                    errorMessage = "connection issue please wait";
+                }
+                showToast(errorMessage, 'error'); 
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+        // Auth State Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserUid = user.uid;
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('prof-email').value = user.email;
+                initAppListeners();
+            } else {
+                currentUserUid = null;
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('main-app').style.display = 'none';
+            }
+        });
+
+        // Main App Listeners
+        function initAppListeners() {
+            listenProfile();
+            listenMyRegistrations();
+            listenTournaments();
+            listenEvents();
+            listenAnnouncements();
+            listenNotifications();
+        }
+
+        // --- Profile Handling ---
+        function listenProfile() {
+            onValue(ref(db, `users/${currentUserUid}`), (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if(data.banned) {
+                        signOut(auth);
+                        alert("Your account has been banned. Contact support.");
+                        return;
+                    }
+                    // Populate Profile Form
+                    document.getElementById('prof-name').value = data.fullName || '';
+                    document.getElementById('prof-username').value = data.username || '';
+                    document.getElementById('prof-phone').value = data.phone || '';
+                    document.getElementById('prof-bio').value = data.bio || '';
+                    document.getElementById('prof-ign').value = data.ign || '';
+                    document.getElementById('prof-squad').value = data.squadName || '';
+                    document.getElementById('prof-pid').value = data.playerId || '';
+                    document.getElementById('prof-zid').value = data.zoneId || '';
+                    document.getElementById('prof-crank').value = data.currentRank || '';
+                    document.getElementById('prof-hrank').value = data.highestRank || '';
+                    document.getElementById('prof-lane').value = data.prefLane || '';
+                    document.getElementById('prof-role').value = data.mainRole || '';
+                    document.getElementById('prof-mhero').value = data.mainHero || '';
+                    document.getElementById('prof-shero').value = data.secHero || '';
+
+                    // Header UI
+                    document.getElementById('display-name').innerText = data.fullName || 'User';
+                    document.getElementById('display-ign').innerText = data.ign ? `@${data.ign}` : '';
+                    document.getElementById('display-uid').innerText = data.userId5 ? `ID: ${data.userId5}` : 'ID: -----';
+                    if(data.pfp) {
+                        document.getElementById('display-pfp').src = data.pfp;
+                        // Highlight correct avatar in selector
+                        document.querySelectorAll('.avatar-option').forEach(img => {
+                            if(img.src === data.pfp) img.classList.add('selected');
+                            else img.classList.remove('selected');
+                        });
+                    }
+
+                    // Render Payments
+                    renderPayments(data.payments);
+                }
+            });
+        }
+
+        // Avatar Selection Logic
+        document.querySelectorAll('.avatar-option').forEach(img => {
+            img.addEventListener('click', async (e) => {
+                const newPfp = e.target.src;
+                
+                // Visual update
+                document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+                e.target.classList.add('selected');
+                document.getElementById('display-pfp').src = newPfp;
+                
+                // Save to Firebase
+                if (currentUserUid) {
+                    try {
+                        await update(ref(db, `users/${currentUserUid}`), { pfp: newPfp });
+                        showToast("Avatar updated successfully!");
+                    } catch (err) {
+                        showToast("Failed to update avatar.", 'error');
+                    }
+                }
+            });
+        });
+
+        document.getElementById('form-profile').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                fullName: document.getElementById('prof-name').value,
+                username: document.getElementById('prof-username').value,
+                phone: document.getElementById('prof-phone').value,
+                bio: document.getElementById('prof-bio').value,
+                ign: document.getElementById('prof-ign').value,
+                squadName: document.getElementById('prof-squad').value,
+                playerId: document.getElementById('prof-pid').value,
+                zoneId: document.getElementById('prof-zid').value,
+                currentRank: document.getElementById('prof-crank').value,
+                highestRank: document.getElementById('prof-hrank').value,
+                prefLane: document.getElementById('prof-lane').value,
+                mainRole: document.getElementById('prof-role').value,
+                mainHero: document.getElementById('prof-mhero').value,
+                secHero: document.getElementById('prof-shero').value,
+            };
+            try {
+                await update(ref(db, `users/${currentUserUid}`), data);
+                showToast("Profile updated successfully!");
+            } catch (err) { showToast(err.message, 'error'); }
+        });
+
+        function renderPayments(paymentsObj) {
+            const container = document.getElementById('user-payments-list');
+            if(!paymentsObj) return container.innerHTML = `<p class="text-muted">No records found.</p>`;
+            
+            let html = '';
+            Object.values(paymentsObj).forEach(p => {
+                let badgeClass = 'status-full'; // default yellow
+                if(p.status === 'Paid') badgeClass = 'status-open'; // green
+                if(p.status === 'Refunded' || p.status === 'Refund Rejected') badgeClass = 'status-closed'; // red
+
+                html += `
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--border);">
+                    <div style="display:flex; justify-content: space-between; margin-bottom:0.5rem;">
+                        <strong>Order: ${p.orderId}</strong>
+                        <span style="font-size:0.8rem; font-weight:bold;" class="${badgeClass} badge" style="position:static; display:inline-block; padding: 2px 8px;">${p.status}</span>
+                    </div>
+                    <div style="font-size:0.85rem; color: var(--text-muted);">
+                        Tourney ID: ${p.tid}<br>
+                        Amount: ₹${p.amount} (${p.method})<br>
+                        Date: ${p.date} ${p.time}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // --- Active Registrations Handling ---
+        function listenMyRegistrations() {
+            onValue(ref(db, 'registrations'), (snap) => {
+                myRegistrations = {};
+                if (snap.exists()) {
+                    snap.forEach(child => {
+                        let r = child.val();
+                        if (r.uid === currentUserUid) {
+                            myRegistrations[r.tid] = r.status;
+                        }
+                    });
+                }
+                renderTList(); // Re-render tournament buttons
+            });
+        }
+
+        // --- Tournament Registration Submission ---
+        window.registerForTournament = async (tId, tid5, tName, waLink) => {
+            try {
+                // Fetch user data for Squad Name
+                const userSnap = await get(ref(db, `users/${currentUserUid}`));
+                let squad = "Unknown";
+                if (userSnap.exists() && userSnap.val().squadName) {
+                    squad = userSnap.val().squadName;
+                }
+
+                // Push to registrations for Admin Panel
+                await push(ref(db, 'registrations'), {
+                    uid: currentUserUid,
+                    squad: squad,
+                    tournamentName: tName,
+                    tid: tid5,
+                    status: 'Pending',
+                    timestamp: new Date().toISOString()
+                });
+
+                showToast("Request Sent! Redirecting to WhatsApp...");
+                
+                // Open WA
+                setTimeout(() => {
+                    window.open(waLink, '_blank');
+                }, 1200);
+
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        };
+
+
+        // --- Tournaments Handling ---
+        window.renderTList = () => {
+            const list = document.getElementById('tournaments-list');
+            const homeList = document.getElementById('home-featured-tournaments');
+            const searchInput = document.getElementById('search-tournaments');
+            const filter = searchInput ? searchInput.value.toLowerCase() : "";
+
+            if (allTournaments.length === 0) {
+                list.innerHTML = '<p class="text-muted">No tournaments available.</p>';
+                homeList.innerHTML = '<p class="text-muted">No featured tournaments right now.</p>';
+                return;
+            }
+
+            let html = '';
+            let featuredHtml = '';
+            
+            allTournaments.forEach((t, index) => {
+                if(filter && !t.name.toLowerCase().includes(filter)) return;
+                
+                let badgeClass = t.status === 'Open' ? 'status-open' : (t.status === 'Closed' ? 'status-closed' : 'status-full');
+                const tid5 = t.tid || get5DigitId(t.id); // Secure 5-digit ID
+                
+                // Default WA Link Configuration
+                const customWaLink = t.waLink && t.waLink.trim() !== "" ? t.waLink : false;
+                const encodedMsg = encodeURIComponent(`Hi Admin, I want to register for Tournament #${tid5} (${t.name}). My UID is ${currentUserUid}.`);
+                const waLink = customWaLink || `https://wa.me/message/P2LQK626QVSLK1?text=${encodedMsg}`;
+                
+                // Dynamic Action Button
+                let actionHtml = '';
+                const myStatus = myRegistrations[tid5];
+
+                if (myStatus) {
+                    // Registration Request Exists
+                    let btnStyle = myStatus === 'Registered' ? 'color: var(--success); border-color: var(--success);' : 
+                                   (myStatus === 'Rejected' ? 'color: var(--danger); border-color: var(--danger);' : 'color: var(--secondary); border-color: var(--secondary);');
+                    
+                    actionHtml = `<button class="btn btn-outline" style="${btnStyle}" disabled>Status: ${myStatus}</button>`;
+                } else if (t.status === 'Open') {
+                    // Open for Registration
+                    actionHtml = `<button class="btn btn-primary" onclick="registerForTournament('${t.id}', '${tid5}', '${t.name}', '${waLink}')">REGISTER NOW</button>`;
+                } else {
+                    // Closed/Full
+                    actionHtml = `<button class="btn btn-outline" disabled>Registration ${t.status}</button>`;
+                }
+
+                const cardHtml = `
+                <div class="card glass">
+                    <span class="status-badge ${badgeClass}">${t.status}</span>
+                    <img src="${t.banner}" class="card-banner" alt="Banner">
+                    <h3 class="card-title">${t.name} <span class="tid-badge">#${tid5}</span></h3>
+                    <p class="text-muted mb-1">${t.desc}</p>
+                    <div class="card-grid">
+                        <div class="card-stat"><span class="card-stat-label">Prize Pool</span><span class="card-stat-value text-accent">₹${t.prizePool}</span></div>
+                        <div class="card-stat"><span class="card-stat-label">Entry Fee</span><span class="card-stat-value">₹${t.entryFee}</span></div>
+                        <div class="card-stat"><span class="card-stat-label">Date & Time</span><span class="card-stat-value">${t.date} | ${t.time}</span></div>
+                        <div class="card-stat"><span class="card-stat-label">Slots</span><span class="card-stat-value">${(t.remainingSlots !== undefined ? t.remainingSlots : t.totalSlots)} / ${t.totalSlots}</span></div>
+                        <div class="card-stat"><span class="card-stat-label">Mode</span><span class="card-stat-value">${t.gameMode}</span></div>
+                        <div class="card-stat"><span class="card-stat-label">Deadline</span><span class="card-stat-value">${new Date(t.deadline).toLocaleString()}</span></div>
+                    </div>
+                    <p class="text-muted mb-1" style="font-size:0.8rem;"><strong>Rules:</strong> ${t.rules}</p>
+                    ${actionHtml}
+                </div>`;
+                
+                html += cardHtml;
+                // Put top 5 open in featured
+                if(t.status === 'Open' && index < 5) {
+                    featuredHtml += `<div class="slider-item">${cardHtml}</div>`;
+                }
+            });
+            
+            list.innerHTML = html || '<p class="text-muted">No tournaments match your search.</p>';
+            homeList.innerHTML = featuredHtml || '<p class="text-muted">No featured tournaments right now.</p>';
+        };
+
+        function listenTournaments() {
+            onValue(ref(db, 'tournaments'), (snapshot) => {
+                allTournaments = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => { allTournaments.push({ id: child.key, ...child.val() }); });
+                    allTournaments.sort((a,b) => new Date(b.date) - new Date(a.date));
+                }
+                renderTList();
+            });
+
+            document.getElementById('search-tournaments').addEventListener('input', renderTList);
+        }
+
+
+        // --- Events Handling ---
+        function listenEvents() {
+            onValue(ref(db, 'events'), (snapshot) => {
+                const container = document.getElementById('events-list');
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p class="text-muted">No events currently active.</p>';
+                    return;
+                }
+                
+                let eData = [];
+                snapshot.forEach(child => { eData.push(child.val()); });
+                eData = eData.filter(e => e.active).sort((a,b) => a.order - b.order);
+                
+                let html = '';
+                eData.forEach(e => {
+                    html += `
+                    <div class="card glass text-center">
+                        <img src="${e.banner}" class="card-banner" alt="Event">
+                        <h3 class="mb-1">${e.title}</h3>
+                        <p class="text-muted mb-1">${e.desc}</p>
+                        <a href="${e.link}" target="_blank" class="btn btn-primary">${e.btnText || 'Learn More'}</a>
+                    </div>`;
+                });
+                container.innerHTML = html || '<p class="text-muted">No events currently active.</p>';
+            });
+        }
+
+        // --- Announcements Handling ---
+        function listenAnnouncements() {
+            onValue(ref(db, 'announcements'), (snapshot) => {
+                const container = document.getElementById('home-announcements');
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<div class="glass" style="padding:1rem;"><p class="text-muted">No new announcements.</p></div>';
+                    return;
+                }
+                let html = '';
+                snapshot.forEach(child => {
+                    const a = child.val();
+                    html += `
+                    <div class="glass" style="padding:1rem; margin-bottom:1rem; border-left: 4px solid var(--accent);">
+                        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                            <h4 style="margin:0;">${a.title}</h4>
+                            <span style="font-size:0.7rem; color:var(--text-muted);">${a.date}</span>
+                        </div>
+                        <p style="font-size:0.85rem; margin-top:0.5rem; color:#e2e8f0;">${a.content}</p>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            });
+        }
+
+        // --- Notifications Handling ---
+        let unreadCount = 0;
+        function listenNotifications() {
+            // Combine Global and Personal Notifs
+            const renderNotifs = async () => {
+                const container = document.getElementById('notifications-list');
+                const badge = document.getElementById('notif-badge');
+                let allNotifs = [];
+
+                // Fetch Global
+                const globSnap = await get(ref(db, 'notifications/global'));
+                if(globSnap.exists()) {
+                    globSnap.forEach(c => allNotifs.push({id: c.key, type: 'global', ...c.val()}));
+                }
+
+                // Fetch Personal
+                const persSnap = await get(ref(db, `users/${currentUserUid}/notifications`));
+                if(persSnap.exists()) {
+                    persSnap.forEach(c => allNotifs.push({id: c.key, type: 'personal', ...c.val()}));
+                }
+
+                allNotifs.sort((a,b) => new Date(b.date) - new Date(a.date));
+                
+                unreadCount = allNotifs.filter(n => !n.read).length;
+                if(unreadCount > 0) {
+                    badge.style.display = 'block';
+                    badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+                } else {
+                    badge.style.display = 'none';
+                }
+
+                let html = '';
+                allNotifs.forEach(n => {
+                    const isNew = !n.read;
+                    html += `
+                    <div class="glass" style="padding:1rem; margin-bottom:1rem; border-left: 4px solid ${isNew ? 'var(--primary)' : 'transparent'}; opacity: ${isNew ? '1' : '0.7'};">
+                        <h4 style="margin-bottom:0.2rem;">${n.title}</h4>
+                        <p style="font-size:0.85rem; color:var(--text-muted);">${n.message}</p>
+                        <div style="font-size:0.7rem; color:var(--accent); margin-top:0.5rem; text-align:right;">
+                            ${new Date(n.date).toLocaleString()}
+                        </div>
+                    </div>`;
+                });
+                container.innerHTML = html || '<p class="text-muted">No notifications.</p>';
+            };
+
+            // Call immediately, and set listeners to trigger render
+            renderNotifs();
+            onValue(ref(db, 'notifications/global'), renderNotifs);
+            onValue(ref(db, `users/${currentUserUid}/notifications`), renderNotifs);
+        }
+
+        window.markNotificationsRead = async () => {
+            if(unreadCount === 0) return;
+            // Only update personal notifications as read to avoid writing to global scope as a user
+            const persSnap = await get(ref(db, `users/${currentUserUid}/notifications`));
+            if(persSnap.exists()) {
+                const updates = {};
+                persSnap.forEach(child => {
+                    if(!child.val().read) updates[`users/${currentUserUid}/notifications/${child.key}/read`] = true;
+                });
+                if(Object.keys(updates).length > 0) {
+                    await update(ref(db), updates);
+                }
+            }
+            document.getElementById('notif-badge').style.display = 'none';
+            unreadCount = 0;
+        };
+
+        // Basic Service Worker Registration for PWA Installability
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // In production, you would point this to an actual sw.js file
+                // navigator.serviceWorker.register('/sw.js').catch(console.error);
+            });
+        }
+
+    </script>
+</body>
+</html>
