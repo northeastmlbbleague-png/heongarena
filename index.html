@@ -1,9 +1,32 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HEONG ARENA</title>
+    
+    <!-- Meta Description -->
+    <meta name="description" content="Join HEONG ARENA, the ultimate platform for Mobile Legends (MLBB) tournaments in India and the Northeast. Register your squad, compete, and win prize pools!">
+
+    <!-- Favicon & Touch Icon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/5WFvShyf/IMG-20260810-232635.png">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/5WFvShyf/IMG-20260810-232635.png">
+
+    <!-- Social Media & Search Preview Image -->
+    <meta property="og:image" content="https://i.ibb.co/5WFvShyf/IMG-20260810-232635.png">
+    <meta property="twitter:image" content="https://i.ibb.co/5WFvShyf/IMG-20260810-232635.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "HEONG ARENA",
+      "url": "https://www.heongarena.online/",
+      "logo": "https://i.ibb.co/5WFvShyf/IMG-20260810-232635.png"
+    }
+    </script>
+
     <!-- Web App Manifest for PWA -->
     <meta name="theme-color" content="#0b0c10">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,7 +59,7 @@
             color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: var(--nav-height); /* Space for bottom nav */
+            padding-bottom: var(--nav-height);
         }
 
         /* Glassmorphism Utilities */
@@ -94,7 +117,7 @@
         /* Bottom Navigation */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height);
-            display: flex; justify-content: space-around; align-items: center;
+            display: flex; justify-style: space-around; align-items: center;
             background: rgba(11, 12, 16, 0.85); backdrop-filter: blur(20px);
             border-top: 1px solid var(--border); z-index: 1000;
             padding-bottom: env(safe-area-inset-bottom);
@@ -380,7 +403,7 @@
                 <span>Notifs</span>
             </a>
             <a href="#" class="nav-item" data-target="view-profile">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 <span>Profile</span>
             </a>
         </nav>
@@ -392,16 +415,15 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getDatabase, ref, set, push, update, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Exact Master Prompt Config
         const firebaseConfig = {
-  apiKey: "AIzaSyDkKsLXM0lHN4uOIkMXd1gjTPOK0I3St-g",
-  authDomain: "heong-arena-online.firebaseapp.com",
-  projectId: "heong-arena-online",
-  storageBucket: "heong-arena-online.firebasestorage.app",
-  messagingSenderId: "182027151522",
-  appId: "1:182027151522:web:2e2848a97f97d5d6088ffb",
-  measurementId: "G-SHDX77PZ8Q"
-};
+            apiKey: "AIzaSyDkKsLXM0lHN4uOIkMXd1gjTPOK0I3St-g",
+            authDomain: "heong-arena-online.firebaseapp.com",
+            projectId: "heong-arena-online",
+            storageBucket: "heong-arena-online.firebasestorage.app",
+            messagingSenderId: "182027151522",
+            appId: "1:182027151522:web:2e2848a97f97d5d6088ffb",
+            measurementId: "G-SHDX77PZ8Q"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -428,14 +450,14 @@
             document.getElementById(`form-${mode}`).classList.remove('d-none');
         };
 
-        // Consistent 5-digit ID Generator (Using Firebase push key hash)
+        // Consistent 5-digit ID Generator
         function get5DigitId(key) {
             let hash = 0;
             for (let i = 0; i < key.length; i++) {
                 hash = key.charCodeAt(i) + ((hash << 5) - hash);
             }
             hash = Math.abs(hash);
-            return (hash % 90000) + 10000; // Ensures result is between 10000 and 99999
+            return (hash % 90000) + 10000;
         }
 
         // Navigation Setup
@@ -477,12 +499,12 @@
             const name = document.getElementById('signup-name').value;
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                const randomUserId = Math.floor(10000 + Math.random() * 90000); // Generate Random 5-digit user id
+                const randomUserId = Math.floor(10000 + Math.random() * 90000);
                 await set(ref(db, `users/${cred.user.uid}`), {
                     email: email,
                     fullName: name,
                     userId5: randomUserId,
-                    pfp: "https://i.ibb.co/DfbJ93sw/1785417190933.png", // Default avatar
+                    pfp: "https://i.ibb.co/DfbJ93sw/1785417190933.png",
                     createdAt: new Date().toISOString()
                 });
                 showToast("Account created successfully!");
@@ -547,7 +569,6 @@
                         alert("Your account has been banned. Contact support.");
                         return;
                     }
-                    // Populate Profile Form
                     document.getElementById('prof-name').value = data.fullName || '';
                     document.getElementById('prof-username').value = data.username || '';
                     document.getElementById('prof-phone').value = data.phone || '';
@@ -563,20 +584,17 @@
                     document.getElementById('prof-mhero').value = data.mainHero || '';
                     document.getElementById('prof-shero').value = data.secHero || '';
 
-                    // Header UI
                     document.getElementById('display-name').innerText = data.fullName || 'User';
                     document.getElementById('display-ign').innerText = data.ign ? `@${data.ign}` : '';
                     document.getElementById('display-uid').innerText = data.userId5 ? `ID: ${data.userId5}` : 'ID: -----';
                     if(data.pfp) {
                         document.getElementById('display-pfp').src = data.pfp;
-                        // Highlight correct avatar in selector
                         document.querySelectorAll('.avatar-option').forEach(img => {
                             if(img.src === data.pfp) img.classList.add('selected');
                             else img.classList.remove('selected');
                         });
                     }
 
-                    // Render Payments
                     renderPayments(data.payments);
                 }
             });
@@ -587,12 +605,10 @@
             img.addEventListener('click', async (e) => {
                 const newPfp = e.target.src;
                 
-                // Visual update
                 document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
                 e.target.classList.add('selected');
                 document.getElementById('display-pfp').src = newPfp;
                 
-                // Save to Firebase
                 if (currentUserUid) {
                     try {
                         await update(ref(db, `users/${currentUserUid}`), { pfp: newPfp });
@@ -634,9 +650,9 @@
             
             let html = '';
             Object.values(paymentsObj).forEach(p => {
-                let badgeClass = 'status-full'; // default yellow
-                if(p.status === 'Paid') badgeClass = 'status-open'; // green
-                if(p.status === 'Refunded' || p.status === 'Refund Rejected') badgeClass = 'status-closed'; // red
+                let badgeClass = 'status-full';
+                if(p.status === 'Paid') badgeClass = 'status-open';
+                if(p.status === 'Refunded' || p.status === 'Refund Rejected') badgeClass = 'status-closed';
 
                 html += `
                 <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--border);">
@@ -666,42 +682,56 @@
                         }
                     });
                 }
-                renderTList(); // Re-render tournament buttons
+                renderTList();
             });
         }
 
-        // --- Tournament Registration Submission ---
-        window.registerForTournament = async (tId, tid5, tName, waLink) => {
+        // --- Tournament Registration Submission with Auto-Filled WhatsApp Message ---
+        window.registerForTournament = async (tId, tid5, tName, customWaLink) => {
             try {
-                // Fetch user data for Squad Name
                 const userSnap = await get(ref(db, `users/${currentUserUid}`));
-                let squad = "Unknown";
-                if (userSnap.exists() && userSnap.val().squadName) {
-                    squad = userSnap.val().squadName;
-                }
+                const userVal = userSnap.exists() ? userSnap.val() : {};
 
-                // Push to registrations for Admin Panel
+                const getVal = (val) => (val && String(val).trim() !== "") ? String(val).trim() : "NIL";
+
+                const userId5 = getVal(userVal.userId5);
+                const fullName = getVal(userVal.fullName);
+                const ign = getVal(userVal.ign);
+                const squadName = getVal(userVal.squadName);
+                const playerId = getVal(userVal.playerId);
+                const zoneId = getVal(userVal.zoneId);
+
                 await push(ref(db, 'registrations'), {
                     uid: currentUserUid,
-                    squad: squad,
+                    squad: squadName,
                     tournamentName: tName,
                     tid: tid5,
                     status: 'Pending',
                     timestamp: new Date().toISOString()
                 });
 
-                showToast("Request Sent! Redirecting to WhatsApp...");
+                showToast("Request logged! Opening WhatsApp...");
+
+                const waMessage = `Hello HEONG ARENA, I want to register for ${tName} (Tournament ID: #${tid5}).\n\nPlayer Profile Details:\n• User ID: ${userId5}\n• Player Name: ${fullName}\n• IGN: ${ign}\n• Squad Name: ${squadName}\n• Player ID: ${playerId}\n• Zone ID: ${zoneId}`;
+
+                let waUrl = "";
+                if (customWaLink && customWaLink.trim() !== "" && customWaLink !== "false") {
+                    const baseUrl = customWaLink.split('?')[0];
+                    const separator = baseUrl.includes('?') ? '&' : '?';
+                    waUrl = `${baseUrl}${separator}text=${encodeURIComponent(waMessage)}`;
+                } else {
+                    const adminPhoneNumber = "919362704172"; 
+                    waUrl = `https://api.whatsapp.com/send?phone=${adminPhoneNumber}&text=${encodeURIComponent(waMessage)}`;
+                }
                 
-                // Open WA
                 setTimeout(() => {
-                    window.open(waLink, '_blank');
-                }, 1200);
+                    window.open(waUrl, '_blank');
+                }, 600);
 
             } catch (error) {
                 showToast(error.message, 'error');
             }
         };
-
 
         // --- Tournaments Handling ---
         window.renderTList = () => {
@@ -723,28 +753,21 @@
                 if(filter && !t.name.toLowerCase().includes(filter)) return;
                 
                 let badgeClass = t.status === 'Open' ? 'status-open' : (t.status === 'Closed' ? 'status-closed' : 'status-full');
-                const tid5 = t.tid || get5DigitId(t.id); // Secure 5-digit ID
+                const tid5 = t.tid || get5DigitId(t.id);
                 
-                // Default WA Link Configuration
-                const customWaLink = t.waLink && t.waLink.trim() !== "" ? t.waLink : false;
-                const encodedMsg = encodeURIComponent(`Hi Admin, I want to register for Tournament #${tid5} (${t.name}). My UID is ${currentUserUid}.`);
-                const waLink = customWaLink || `https://wa.me/message/P2LQK626QVSLK1?text=${encodedMsg}`;
+                const customWaLink = t.waLink && t.waLink.trim() !== "" ? t.waLink : "";
                 
-                // Dynamic Action Button
                 let actionHtml = '';
                 const myStatus = myRegistrations[tid5];
 
                 if (myStatus) {
-                    // Registration Request Exists
                     let btnStyle = myStatus === 'Registered' ? 'color: var(--success); border-color: var(--success);' : 
                                    (myStatus === 'Rejected' ? 'color: var(--danger); border-color: var(--danger);' : 'color: var(--secondary); border-color: var(--secondary);');
                     
                     actionHtml = `<button class="btn btn-outline" style="${btnStyle}" disabled>Status: ${myStatus}</button>`;
                 } else if (t.status === 'Open') {
-                    // Open for Registration
-                    actionHtml = `<button class="btn btn-primary" onclick="registerForTournament('${t.id}', '${tid5}', '${t.name}', '${waLink}')">REGISTER NOW</button>`;
+                    actionHtml = `<button class="btn btn-primary" onclick="registerForTournament('${t.id}', '${tid5}', '${t.name.replace(/'/g, "\\'")}', '${customWaLink}')">REGISTER NOW</button>`;
                 } else {
-                    // Closed/Full
                     actionHtml = `<button class="btn btn-outline" disabled>Registration ${t.status}</button>`;
                 }
 
@@ -767,7 +790,6 @@
                 </div>`;
                 
                 html += cardHtml;
-                // Put top 5 open in featured
                 if(t.status === 'Open' && index < 5) {
                     featuredHtml += `<div class="slider-item">${cardHtml}</div>`;
                 }
@@ -789,7 +811,6 @@
 
             document.getElementById('search-tournaments').addEventListener('input', renderTList);
         }
-
 
         // --- Events Handling ---
         function listenEvents() {
@@ -845,19 +866,16 @@
         // --- Notifications Handling ---
         let unreadCount = 0;
         function listenNotifications() {
-            // Combine Global and Personal Notifs
             const renderNotifs = async () => {
                 const container = document.getElementById('notifications-list');
                 const badge = document.getElementById('notif-badge');
                 let allNotifs = [];
 
-                // Fetch Global
                 const globSnap = await get(ref(db, 'notifications/global'));
                 if(globSnap.exists()) {
                     globSnap.forEach(c => allNotifs.push({id: c.key, type: 'global', ...c.val()}));
                 }
 
-                // Fetch Personal
                 const persSnap = await get(ref(db, `users/${currentUserUid}/notifications`));
                 if(persSnap.exists()) {
                     persSnap.forEach(c => allNotifs.push({id: c.key, type: 'personal', ...c.val()}));
@@ -888,7 +906,6 @@
                 container.innerHTML = html || '<p class="text-muted">No notifications.</p>';
             };
 
-            // Call immediately, and set listeners to trigger render
             renderNotifs();
             onValue(ref(db, 'notifications/global'), renderNotifs);
             onValue(ref(db, `users/${currentUserUid}/notifications`), renderNotifs);
@@ -896,7 +913,6 @@
 
         window.markNotificationsRead = async () => {
             if(unreadCount === 0) return;
-            // Only update personal notifications as read to avoid writing to global scope as a user
             const persSnap = await get(ref(db, `users/${currentUserUid}/notifications`));
             if(persSnap.exists()) {
                 const updates = {};
@@ -911,14 +927,9 @@
             unreadCount = 0;
         };
 
-        // Basic Service Worker Registration for PWA Installability
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // In production, you would point this to an actual sw.js file
-                // navigator.serviceWorker.register('/sw.js').catch(console.error);
-            });
+            window.addEventListener('load', () => {});
         }
-
     </script>
 </body>
 </html>
