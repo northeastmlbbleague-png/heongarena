@@ -1,4 +1,5 @@
- <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +24,7 @@
       "@type": "Organization",
       "name": "HEONG ARENA",
       "url": "https://www.heongarena.online/",
-      "logo": "https://i.ibb.co/5WFvShyf/IMG-20260810-232635.png"
+      "logo": "https://heongarena.online/Logo.png"
     }
     </script>
 
@@ -78,16 +79,6 @@
         .text-gradient { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .text-muted { color: var(--text-muted); font-size: 0.85rem; }
 
-        /* Auth Screen */
-        #auth-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 2rem; overflow-y: auto;
-        }
-        .auth-container { width: 100%; max-width: 400px; padding: 2rem; }
-        .auth-logo { text-align: center; font-size: 2rem; font-weight: 800; margin-bottom: 2rem; }
-        
         /* Forms */
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: var(--text-muted); }
@@ -104,8 +95,8 @@
         /* Buttons */
         .btn {
             width: 100%; padding: 1rem; border: none; border-radius: 12px; cursor: pointer;
-            font-weight: 600; font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s;
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            font-weight: 600; font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none;
         }
         .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
         .btn-primary:active { transform: scale(0.98); }
@@ -117,7 +108,7 @@
         /* Bottom Navigation */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height);
-            display: flex; justify-style: space-around; align-items: center;
+            display: flex; justify-content: space-around; align-items: center;
             background: rgba(11, 12, 16, 0.85); backdrop-filter: blur(20px);
             border-top: 1px solid var(--border); z-index: 1000;
             padding-bottom: env(safe-area-inset-bottom);
@@ -138,7 +129,7 @@
         }
 
         /* Views Container */
-        #main-app { display: none; }
+        #main-app { display: block; }
         .view-section { display: none; padding: 1rem; padding-top: 2rem; animation: fadeSlideUp 0.4s ease forwards; }
         .view-section.active { display: block; }
 
@@ -164,14 +155,58 @@
         .status-open { background: rgba(56, 161, 105, 0.8); color: white; }
         .status-closed { background: rgba(229, 62, 62, 0.8); color: white; }
         .status-full { background: rgba(212, 175, 55, 0.8); color: var(--bg-color); }
-        .status-pending { background: rgba(49, 130, 206, 0.8); color: white; }
 
-        /* Profile Specifics */
-        .profile-header { text-align: center; margin-bottom: 2rem; }
-        .profile-pic-container { position: relative; width: 100px; height: 100px; margin: 0 auto 1rem; }
-        .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        /* Profile & Dashboard Redesign */
+        .profile-header { text-align: center; margin-bottom: 1.5rem; }
+        .profile-pic-container { position: relative; width: 90px; height: 90px; margin: 0 auto 0.8rem; }
+        .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        
+
+        .profile-menu { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+        .menu-card {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.2rem; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 14px;
+            cursor: pointer; transition: all 0.25s ease; text-decoration: none; color: var(--text-main);
+        }
+        .menu-card:hover, .menu-card:active {
+            background: var(--surface-hover); border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+        .menu-card-left { display: flex; align-items: center; gap: 1rem; }
+        .menu-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: rgba(107, 70, 193, 0.25); color: var(--accent);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .menu-icon svg { width: 20px; height: 20px; fill: currentColor; }
+        .menu-title { font-weight: 600; font-size: 0.95rem; }
+        .menu-subtitle { font-size: 0.75rem; color: var(--text-muted); }
+        .menu-arrow { color: var(--text-muted); font-size: 1.2rem; }
+
+        /* Modal Sub-sections */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 10000; display: flex; align-items: center; justify-content: center;
+            padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-card {
+            width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto;
+            padding: 1.5rem; position: relative; border-radius: 20px;
+            background: var(--bg-color); border: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8); transform: translateY(20px); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-card { transform: translateY(0); }
+        .modal-close {
+            position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.1);
+            border: none; color: white; width: 32px; height: 32px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.2); }
+
         /* Avatars */
         .avatar-selector { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 1rem; }
         .avatar-option { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
@@ -190,7 +225,7 @@
         .slider-item { min-width: 85%; scroll-snap-align: center; }
 
         /* Toast */
-        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; }
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10001; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; }
         .toast { padding: 1rem; border-radius: 12px; background: rgba(30,31,38,0.95); backdrop-filter: blur(10px); border-left: 4px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.5); color: white; font-size: 0.9rem; animation: slideDown 0.3s ease forwards; }
         .toast.success { border-left-color: var(--success); }
         .toast.error { border-left-color: var(--danger); }
@@ -205,48 +240,7 @@
 
     <div id="toast-container"></div>
 
-    <!-- Auth Screen -->
-    <div id="auth-screen">
-        <div class="auth-container glass">
-            <h1 class="auth-logo text-gradient">HEONG ARENA</h1>
-
-            <!-- Sign Up Form (Visible by default) -->
-            <form id="form-signup" class="mb-1">
-                <h2 class="mb-1">Create Account</h2>
-                <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
-                <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
-                <div class="form-group"><label>Password</label><input type="password" id="signup-password" required minlength="6"></div>
-                <button type="submit" class="btn btn-primary mb-1">Sign Up</button>
-                <div class="text-center text-muted">
-                    Already have an account? <a href="#" onclick="toggleAuth('login')" style="color:var(--accent);">Login</a>
-                </div>
-            </form>
-            
-            <!-- Login Form (Hidden by default) -->
-            <form id="form-login" class="mb-1 d-none">
-                <h2 class="mb-1">Welcome Back</h2>
-                <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
-                <div class="form-group"><label>Password</label><input type="password" id="login-password" required></div>
-                <button type="submit" class="btn btn-primary mb-1">Login</button>
-                <div class="text-center text-muted">
-                    <a href="#" onclick="toggleAuth('signup')" style="color:var(--accent);">Create Account</a> | 
-                    <a href="#" onclick="toggleAuth('forgot')" style="color:var(--secondary);">Forgot Password?</a>
-                </div>
-            </form>
-
-            <!-- Forgot Password Form -->
-            <form id="form-forgot" class="mb-1 d-none">
-                <h2 class="mb-1">Reset Password</h2>
-                <div class="form-group"><label>Email</label><input type="email" id="forgot-email" required></div>
-                <button type="submit" class="btn btn-primary mb-1">Send Reset Link</button>
-                <div class="text-center text-muted">
-                    <a href="#" onclick="toggleAuth('login')" style="color:var(--accent);">Back to Login</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Main Application -->
+    <!-- MAIN APP CONTAINER -->
     <div id="main-app">
         
         <!-- HOME VIEW -->
@@ -295,37 +289,238 @@
 
         <!-- PROFILE VIEW -->
         <div id="view-profile" class="view-section">
-            <div class="profile-header">
-                <div class="profile-pic-container">
-                    <img src="https://i.ibb.co/DfbJ93sw/1785417190933.png" id="display-pfp" class="profile-pic">
+            
+            <!-- 1. UNAUTHENTICATED PROFILE VIEW (Updated Layout) -->
+            <div id="profile-unauth" class="d-none" style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - var(--nav-height) - 4rem);">
+                <div class="card glass text-left" style="padding: 2rem 1.5rem; width: 100%; max-width: 400px; background: rgba(20, 22, 28, 0.95); border: none; border-radius: 20px;">
+                    
+                    <div class="text-center mb-2">
+                        <h2 class="text-gradient" style="font-size: 1.8rem; letter-spacing: 1px; font-weight: 800;">HEONG ARENA</h2>
+                    </div>
+
+                    <!-- SIGNUP FORM (Now the default view) -->
+                    <form id="form-profile-signup">
+                        <h3 class="mb-1" style="font-size: 1.4rem; color: #ffffff;">Create Account</h3>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="color: #8b8d96; font-size: 0.85rem; margin-bottom: 0.5rem;">Full Name</label>
+                            <input type="text" id="prof-signup-name" required style="background: #0d0e12; border: none; border-radius: 12px; padding: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="color: #8b8d96; font-size: 0.85rem; margin-bottom: 0.5rem;">Email</label>
+                            <input type="email" id="prof-signup-email" required style="background: #0d0e12; border: none; border-radius: 12px; padding: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="color: #8b8d96; font-size: 0.85rem; margin-bottom: 0.5rem;">Password</label>
+                            <input type="password" id="prof-signup-pass" required minlength="6" style="background: #0d0e12; border: none; border-radius: 12px; padding: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-1 mt-1" style="border-radius: 12px; padding: 1rem; font-size: 1.05rem; font-weight: 600;">Sign Up</button>
+                        <div class="text-center text-muted mt-1" style="font-size: 0.9rem;">
+                            Already have an account? <a href="#" onclick="showAuthTab('login')" style="color: var(--accent); text-decoration: none; font-weight: 600;">Login</a>
+                        </div>
+                    </form>
+
+                    <!-- LOGIN FORM (Hidden by default) -->
+                    <form id="form-profile-login" class="d-none">
+                        <h3 class="mb-1" style="font-size: 1.4rem; color: #ffffff;">Login</h3>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="color: #8b8d96; font-size: 0.85rem; margin-bottom: 0.5rem;">Email</label>
+                            <input type="email" id="prof-login-email" required style="background: #0d0e12; border: none; border-radius: 12px; padding: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="color: #8b8d96; font-size: 0.85rem; margin-bottom: 0.5rem;">Password</label>
+                            <input type="password" id="prof-login-pass" required style="background: #0d0e12; border: none; border-radius: 12px; padding: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-1 mt-1" style="border-radius: 12px; padding: 1rem; font-size: 1.05rem; font-weight: 600;">Login</button>
+                        <div class="text-center text-muted mt-1" style="font-size: 0.9rem;">
+                            Don't have an account? <a href="#" onclick="showAuthTab('signup')" style="color: var(--accent); text-decoration: none; font-weight: 600;">Sign Up</a>
+                        </div>
+                        <div class="text-center mt-1">
+                            <a href="#" onclick="showAuthTab('forgot')" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem;">Forgot Password?</a>
+                        </div>
+                    </form>
+
+                    <!-- FORGOT PASSWORD FORM (Hidden by default) -->
+                    <form id="form-profile-forgot" class="d-none">
+                        <h3 class="mb-1" style="font-size: 1.4rem; color: #ffffff;">Reset Password</h3>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="color: #8b8d96; font-size: 0.85rem; margin-bottom: 0.5rem;">Email</label>
+                            <input type="email" id="prof-forgot-email" required style="background: #0d0e12; border: none; border-radius: 12px; padding: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-1 mt-1" style="border-radius: 12px; padding: 1rem; font-size: 1.05rem; font-weight: 600;">Send Reset Link</button>
+                        <div class="text-center text-muted mt-1" style="font-size: 0.9rem;">
+                            <a href="#" onclick="showAuthTab('login')" style="color: var(--accent); text-decoration: none; font-weight: 600;">Back to Login</a>
+                        </div>
+                    </form>
                 </div>
-                <h2 id="display-name">Loading...</h2>
-                <p class="text-muted" id="display-ign">@username</p>
-                <p class="text-accent" style="font-weight:bold;" id="display-uid">ID: -----</p>
             </div>
 
-            <!-- Avatar Selection -->
-            <div class="card glass mb-2 text-center">
-                <h3 class="text-accent mb-1" style="font-size: 1rem;">Choose Your Role Avatar</h3>
-                <div class="avatar-selector">
-                    <img src="https://i.ibb.co/DfbJ93sw/1785417190933.png" class="avatar-option" alt="Assassin">
-                    <img src="https://i.ibb.co/tPqvD7TL/1785417348196.png" class="avatar-option" alt="Roam">
-                    <img src="https://i.ibb.co/QFgWD6Gb/1785417012882.png" class="avatar-option" alt="Fighter">
-                    <img src="https://i.ibb.co/wrs4KDqR/1785417103107.png" class="avatar-option" alt="Support">
-                    <img src="https://i.ibb.co/zHRRJBC0/1785417269498.png" class="avatar-option" alt="Marksman">
-                    <img src="https://i.ibb.co/HfR2qZNL/1785417426185.png" class="avatar-option" alt="Mage">
+            <!-- 2. LOGGED-IN PROFILE DASHBOARD -->
+            <div id="profile-dashboard" class="d-none">
+                <div class="profile-header">
+                    <div class="profile-pic-container">
+                        <img src="https://i.ibb.co/DfbJ93sw/1785417190933.png" id="display-pfp" class="profile-pic" alt="Avatar">
+                    </div>
+                    <h2 id="display-name">Loading...</h2>
+                    <p class="text-muted" id="display-ign">@username</p>
+                    <p class="text-accent" style="font-weight:bold; margin-top:0.2rem;" id="display-uid">ID: -----</p>
+                </div>
+
+                <div class="profile-menu">
+                    <!-- Personal Info Card -->
+                    <div class="menu-card" onclick="openModal('modal-personal-info')">
+                        <div class="menu-card-left">
+                            <div class="menu-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            </div>
+                            <div>
+                                <div class="menu-title">Personal Information</div>
+                                <div class="menu-subtitle">Name, username, phone & bio</div>
+                            </div>
+                        </div>
+                        <span class="menu-arrow">›</span>
+                    </div>
+
+                    <!-- MLBB Profile Card -->
+                    <div class="menu-card" onclick="openModal('modal-mlbb-profile')">
+                        <div class="menu-card-left">
+                            <div class="menu-icon">
+                                <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                            </div>
+                            <div>
+                                <div class="menu-title">MLBB Profile</div>
+                                <div class="menu-subtitle">IGN, Squad, Player ID & main roles</div>
+                            </div>
+                        </div>
+                        <span class="menu-arrow">›</span>
+                    </div>
+
+                    <!-- Change Avatar Card -->
+                    <div class="menu-card" onclick="openModal('modal-avatar')">
+                        <div class="menu-card-left">
+                            <div class="menu-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                            </div>
+                            <div>
+                                <div class="menu-title">Change Avatar</div>
+                                <div class="menu-subtitle">Pick your gaming role avatar</div>
+                            </div>
+                        </div>
+                        <span class="menu-arrow">›</span>
+                    </div>
+
+                    <!-- My Registrations Card -->
+                    <div class="menu-card" onclick="openModal('modal-payments')">
+                        <div class="menu-card-left">
+                            <div class="menu-icon">
+                                <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                            </div>
+                            <div>
+                                <div class="menu-title">Registrations & Payments</div>
+                                <div class="menu-subtitle">View entry orders & payment status</div>
+                            </div>
+                        </div>
+                        <span class="menu-arrow">›</span>
+                    </div>
+
+                    <!-- Refund Policy Card -->
+                    <div class="menu-card" onclick="openModal('modal-refund')">
+                        <div class="menu-card-left">
+                            <div class="menu-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm0-4h-2V7h2v7z"/></svg>
+                            </div>
+                            <div>
+                                <div class="menu-title">Refund Policy</div>
+                                <div class="menu-subtitle">Terms & cancellation guidelines</div>
+                            </div>
+                        </div>
+                        <span class="menu-arrow">›</span>
+                    </div>
+
+                    <!-- Customer Service Card -->
+                    <div class="menu-card" onclick="openCustomerService()">
+                        <div class="menu-card-left">
+                            <div class="menu-icon" style="background: rgba(56, 161, 105, 0.25); color: var(--success);">
+                                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                            </div>
+                            <div>
+                                <div class="menu-title">Customer Service</div>
+                                <div class="menu-subtitle">Get direct WhatsApp support</div>
+                            </div>
+                        </div>
+                        <span class="menu-arrow">›</span>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <button type="button" class="btn btn-danger mt-2" id="btn-logout" style="margin-top: 1rem;">Logout Account</button>
                 </div>
             </div>
 
-            <form id="form-profile" class="card glass mb-2">
-                <h3 class="text-accent mb-1">Personal Info</h3>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-target="view-home">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-tournaments">
+                <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+                <span>Play</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-events">
+                <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                <span>Events</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-notifications">
+                <div class="badge" id="notif-badge">0</div>
+                <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                <span>Notifs</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-profile">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- MODALS SECTION -->
+
+    <!-- Auth Required Modal -->
+    <div id="modal-auth-required" class="modal-overlay">
+        <div class="modal-card glass text-center">
+            <button class="modal-close" onclick="closeModal('modal-auth-required')">✕</button>
+            <h3 class="text-accent mb-1" id="auth-modal-title">Account Required</h3>
+            <p class="text-muted mb-2" id="auth-modal-desc">Please create an account or log in before registering for a tournament.</p>
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                <button class="btn btn-primary" onclick="proceedToAuth('signup')">Sign Up</button>
+                <button class="btn btn-outline" onclick="proceedToAuth('login')">Login</button>
+                <button class="btn btn-danger" onclick="closeModal('modal-auth-required')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personal Info Modal -->
+    <div id="modal-personal-info" class="modal-overlay">
+        <div class="modal-card glass">
+            <button class="modal-close" onclick="closeModal('modal-personal-info')">✕</button>
+            <h3 class="text-accent mb-1">Personal Information</h3>
+            <form id="form-personal-info">
                 <div class="form-group"><label>Full Name</label><input type="text" id="prof-name" required></div>
                 <div class="form-group"><label>Username</label><input type="text" id="prof-username"></div>
                 <div class="form-group"><label>Email (Read-only)</label><input type="email" id="prof-email" readonly></div>
                 <div class="form-group"><label>Phone Number</label><input type="tel" id="prof-phone"></div>
                 <div class="form-group"><label>Bio</label><textarea id="prof-bio" rows="2"></textarea></div>
+                <button type="submit" class="btn btn-primary mt-1">Save Personal Info</button>
+            </form>
+        </div>
+    </div>
 
-                <h3 class="text-accent mb-1 mt-2" style="margin-top:1.5rem;">MLBB Information</h3>
+    <!-- MLBB Profile Modal -->
+    <div id="modal-mlbb-profile" class="modal-overlay">
+        <div class="modal-card glass">
+            <button class="modal-close" onclick="closeModal('modal-mlbb-profile')">✕</button>
+            <h3 class="text-accent mb-1">MLBB Profile</h3>
+            <form id="form-mlbb-info">
                 <div class="grid-2">
                     <div class="form-group"><label>In-Game Name (IGN)</label><input type="text" id="prof-ign"></div>
                     <div class="form-group"><label>Squad Name</label><input type="text" id="prof-squad"></div>
@@ -359,54 +554,50 @@
                     <div class="form-group"><label>Main Hero</label><input type="text" id="prof-mhero"></div>
                     <div class="form-group"><label>Secondary Hero</label><input type="text" id="prof-shero"></div>
                 </div>
-
-                <button type="submit" class="btn btn-primary mt-2" style="margin-top: 1rem;">Save Profile Changes</button>
+                <button type="submit" class="btn btn-primary mt-1">Save MLBB Details</button>
             </form>
-
-            <!-- Payments (Read Only) -->
-            <div class="card glass mb-2">
-                <h3 class="text-accent mb-1">My Registrations & Payments</h3>
-                <div id="user-payments-list"><p class="text-muted">No records found.</p></div>
-            </div>
-
-            <div class="card glass mb-2">
-                <h3 class="text-danger mb-1">Refund Policy</h3>
-                <p class="text-muted" style="font-size: 0.85rem; line-height: 1.5;">
-                    Refunds are available only if the registered team is unable to participate <strong>before their match begins</strong>.<br><br>
-                    If approved:<br>
-                    • Full refund for the entire team.<br>
-                    • Team is disqualified & registration cancelled.<br><br>
-                    <em>No refund will be provided if the team has already played a match.</em>
-                </p>
-            </div>
-
-            <button type="button" class="btn btn-danger mb-2" id="btn-logout">Logout Account</button>
         </div>
+    </div>
 
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <a href="#" class="nav-item active" data-target="view-home">
-                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                <span>Home</span>
-            </a>
-            <a href="#" class="nav-item" data-target="view-tournaments">
-                <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
-                <span>Play</span>
-            </a>
-            <a href="#" class="nav-item" data-target="view-events">
-                <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
-                <span>Events</span>
-            </a>
-            <a href="#" class="nav-item" data-target="view-notifications">
-                <div class="badge" id="notif-badge">0</div>
-                <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-                <span>Notifs</span>
-            </a>
-            <a href="#" class="nav-item" data-target="view-profile">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                <span>Profile</span>
-            </a>
-        </nav>
+    <!-- Avatar Modal -->
+    <div id="modal-avatar" class="modal-overlay">
+        <div class="modal-card glass text-center">
+            <button class="modal-close" onclick="closeModal('modal-avatar')">✕</button>
+            <h3 class="text-accent mb-1">Choose Your Role Avatar</h3>
+            <p class="text-muted mb-1">Select an avatar to display on your profile and leaderboards.</p>
+            <div class="avatar-selector">
+                <img src="https://i.ibb.co/DfbJ93sw/1785417190933.png" class="avatar-option" alt="Assassin">
+                <img src="https://i.ibb.co/tPqvD7TL/1785417348196.png" class="avatar-option" alt="Roam">
+                <img src="https://i.ibb.co/QFgWD6Gb/1785417012882.png" class="avatar-option" alt="Fighter">
+                <img src="https://i.ibb.co/wrs4KDqR/1785417103107.png" class="avatar-option" alt="Support">
+                <img src="https://i.ibb.co/zHRRJBC0/1785417269498.png" class="avatar-option" alt="Marksman">
+                <img src="https://i.ibb.co/HfR2qZNL/1785417426185.png" class="avatar-option" alt="Mage">
+            </div>
+        </div>
+    </div>
+
+    <!-- Payments Modal -->
+    <div id="modal-payments" class="modal-overlay">
+        <div class="modal-card glass">
+            <button class="modal-close" onclick="closeModal('modal-payments')">✕</button>
+            <h3 class="text-accent mb-1">My Registrations & Payments</h3>
+            <div id="user-payments-list"><p class="text-muted">No records found.</p></div>
+        </div>
+    </div>
+
+    <!-- Refund Policy Modal -->
+    <div id="modal-refund" class="modal-overlay">
+        <div class="modal-card glass">
+            <button class="modal-close" onclick="closeModal('modal-refund')">✕</button>
+            <h3 class="text-danger mb-1">Refund Policy</h3>
+            <p class="text-muted" style="font-size: 0.88rem; line-height: 1.6;">
+                Refunds are available only if the registered team is unable to participate <strong>before their match begins</strong>.<br><br>
+                If approved:<br>
+                • Full refund for the entire team.<br>
+                • Team is disqualified & registration cancelled.<br><br>
+                <em>No refund will be provided if the team has already played a match.</em>
+            </p>
+        </div>
     </div>
 
     <!-- Firebase SDK (Modular v10+) -->
@@ -432,6 +623,59 @@
         let currentUserUid = null;
         let allTournaments = [];
         let myRegistrations = {};
+        let pendingRegistrationTarget = null;
+        let pendingEventTarget = null;
+
+        // Clean Error Message Mapping
+        function getCleanErrorMessage(error, context = 'login') {
+            if (!error) return "An unexpected error occurred.";
+            const code = error.code || "";
+
+            if (code === 'auth/network-request-failed') {
+                return "Connection issue. Please check your internet connection and try again.";
+            }
+
+            if (context === 'login') {
+                if (code === 'auth/wrong-password' || code === 'auth/invalid-credential' || code === 'auth/invalid-login-credentials') {
+                    return "Wrong password. Please try again.";
+                }
+                if (code === 'auth/user-not-found') {
+                    return "Incorrect email or account not found.";
+                }
+                if (code === 'auth/invalid-email') {
+                    return "Please enter a valid email address.";
+                }
+                if (code === 'auth/too-many-requests') {
+                    return "Too many attempts. Please try again later.";
+                }
+            }
+
+            if (context === 'signup') {
+                if (code === 'auth/email-already-in-use') {
+                    return "This email is already registered. Please log in instead.";
+                }
+                if (code === 'auth/weak-password') {
+                    return "Password must be at least 6 characters.";
+                }
+                if (code === 'auth/invalid-email') {
+                    return "Please enter a valid email address.";
+                }
+            }
+
+            if (context === 'forgot') {
+                if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
+                    return "No account was found with this email address.";
+                }
+                if (code === 'auth/invalid-email') {
+                    return "Please enter a valid email address.";
+                }
+            }
+
+            // General fallbacks
+            if (code.includes('password')) return "Wrong password. Please try again.";
+            if (code.includes('user') || code.includes('email')) return "Incorrect email or account not found.";
+            return "An error occurred. Please try again.";
+        }
 
         // Utilities
         window.showToast = (msg, type = 'success') => {
@@ -443,11 +687,39 @@
             setTimeout(() => toast.remove(), 4000);
         };
 
-        window.toggleAuth = (mode) => {
-            document.getElementById('form-login').classList.add('d-none');
-            document.getElementById('form-signup').classList.add('d-none');
-            document.getElementById('form-forgot').classList.add('d-none');
-            document.getElementById(`form-${mode}`).classList.remove('d-none');
+        window.openModal = (id) => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('active');
+        };
+
+        window.closeModal = (id) => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('active');
+        };
+
+        window.showAuthTab = (mode) => {
+            document.getElementById('form-profile-login').classList.add('d-none');
+            document.getElementById('form-profile-signup').classList.add('d-none');
+            document.getElementById('form-profile-forgot').classList.add('d-none');
+            document.getElementById(`form-profile-${mode}`).classList.remove('d-none');
+        };
+
+        window.openCustomerService = () => {
+            const adminPhoneNumber = "919362704172";
+            const msg = "Hello HEONG ARENA Customer Service, I need assistance with my account/registration.";
+            window.open(`https://api.whatsapp.com/send?phone=${adminPhoneNumber}&text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
+        window.proceedToAuth = (mode) => {
+            closeModal('modal-auth-required');
+            // Switch tab to profile
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            
+            const profileNav = document.querySelector('[data-target="view-profile"]');
+            if (profileNav) profileNav.classList.add('active');
+            document.getElementById('view-profile').classList.add('active');
+            showAuthTab(mode);
         };
 
         // Consistent 5-digit ID Generator
@@ -475,28 +747,22 @@
             });
         });
 
-        // Authentication Handlers
-        document.getElementById('form-login').addEventListener('submit', async (e) => {
+        // Authentication Handlers inside Profile
+        document.getElementById('form-profile-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-                await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value);
+                await signInWithEmailAndPassword(auth, document.getElementById('prof-login-email').value, document.getElementById('prof-login-pass').value);
                 showToast("Login successful!");
             } catch (error) { 
-                let errorMessage = error.message;
-                if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-login-credentials') {
-                    errorMessage = "wrong password!";
-                } else if (error.code === 'auth/network-request-failed') {
-                    errorMessage = "connection issue please wait";
-                }
-                showToast(errorMessage, 'error'); 
+                showToast(getCleanErrorMessage(error, 'login'), 'error'); 
             }
         });
 
-        document.getElementById('form-signup').addEventListener('submit', async (e) => {
+        document.getElementById('form-profile-signup').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const pass = document.getElementById('signup-password').value;
-            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('prof-signup-email').value;
+            const pass = document.getElementById('prof-signup-pass').value;
+            const name = document.getElementById('prof-signup-name').value;
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 const randomUserId = Math.floor(10000 + Math.random() * 90000);
@@ -509,26 +775,18 @@
                 });
                 showToast("Account created successfully!");
             } catch (error) { 
-                let errorMessage = error.message;
-                if (error.code === 'auth/network-request-failed') {
-                    errorMessage = "connection issue please wait";
-                }
-                showToast(errorMessage, 'error'); 
+                showToast(getCleanErrorMessage(error, 'signup'), 'error'); 
             }
         });
 
-        document.getElementById('form-forgot').addEventListener('submit', async (e) => {
+        document.getElementById('form-profile-forgot').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-                await sendPasswordResetEmail(auth, document.getElementById('forgot-email').value);
+                await sendPasswordResetEmail(auth, document.getElementById('prof-forgot-email').value);
                 showToast("Password reset link sent to email.");
-                toggleAuth('login');
+                showAuthTab('login');
             } catch (error) { 
-                let errorMessage = error.message;
-                if (error.code === 'auth/network-request-failed') {
-                    errorMessage = "connection issue please wait";
-                }
-                showToast(errorMessage, 'error'); 
+                showToast(getCleanErrorMessage(error, 'forgot'), 'error'); 
             }
         });
 
@@ -538,29 +796,49 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUserUid = user.uid;
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('profile-unauth').classList.add('d-none');
+                document.getElementById('profile-dashboard').classList.remove('d-none');
                 document.getElementById('prof-email').value = user.email;
                 initAppListeners();
+
+                // Resume Pending Registration if triggered prior to login
+                if (pendingRegistrationTarget) {
+                    const target = pendingRegistrationTarget;
+                    pendingRegistrationTarget = null;
+                    showToast("Account authenticated! Resuming registration...");
+                    setTimeout(() => {
+                        registerForTournament(target.tId, target.tid5, target.tName, target.customWaLink);
+                    }, 500);
+                } else if (pendingEventTarget) {
+                    const link = pendingEventTarget;
+                    pendingEventTarget = null;
+                    window.open(link, '_blank');
+                }
             } else {
                 currentUserUid = null;
-                document.getElementById('auth-screen').style.display = 'flex';
-                document.getElementById('main-app').style.display = 'none';
+                document.getElementById('profile-dashboard').classList.add('d-none');
+                document.getElementById('profile-unauth').classList.remove('d-none');
+                initPublicAppListeners();
             }
         });
 
-        // Main App Listeners
+        // App Listeners Init
         function initAppListeners() {
             listenProfile();
             listenMyRegistrations();
+            initPublicAppListeners();
+        }
+
+        function initPublicAppListeners() {
             listenTournaments();
             listenEvents();
             listenAnnouncements();
-            listenNotifications();
+            if (currentUserUid) listenNotifications();
         }
 
         // --- Profile Handling ---
         function listenProfile() {
+            if (!currentUserUid) return;
             onValue(ref(db, `users/${currentUserUid}`), (snapshot) => {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
@@ -585,7 +863,7 @@
                     document.getElementById('prof-shero').value = data.secHero || '';
 
                     document.getElementById('display-name').innerText = data.fullName || 'User';
-                    document.getElementById('display-ign').innerText = data.ign ? `@${data.ign}` : '';
+                    document.getElementById('display-ign').innerText = data.ign ? `@${data.ign}` : (data.username ? `@${data.username}` : '@user');
                     document.getElementById('display-uid').innerText = data.userId5 ? `ID: ${data.userId5}` : 'ID: -----';
                     if(data.pfp) {
                         document.getElementById('display-pfp').src = data.pfp;
@@ -604,7 +882,6 @@
         document.querySelectorAll('.avatar-option').forEach(img => {
             img.addEventListener('click', async (e) => {
                 const newPfp = e.target.src;
-                
                 document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
                 e.target.classList.add('selected');
                 document.getElementById('display-pfp').src = newPfp;
@@ -620,13 +897,24 @@
             });
         });
 
-        document.getElementById('form-profile').addEventListener('submit', async (e) => {
+        document.getElementById('form-personal-info').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = {
                 fullName: document.getElementById('prof-name').value,
                 username: document.getElementById('prof-username').value,
                 phone: document.getElementById('prof-phone').value,
-                bio: document.getElementById('prof-bio').value,
+                bio: document.getElementById('prof-bio').value
+            };
+            try {
+                await update(ref(db, `users/${currentUserUid}`), data);
+                showToast("Personal info saved!");
+                closeModal('modal-personal-info');
+            } catch (err) { showToast("Failed to save profile.", 'error'); }
+        });
+
+        document.getElementById('form-mlbb-info').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
                 ign: document.getElementById('prof-ign').value,
                 squadName: document.getElementById('prof-squad').value,
                 playerId: document.getElementById('prof-pid').value,
@@ -640,8 +928,9 @@
             };
             try {
                 await update(ref(db, `users/${currentUserUid}`), data);
-                showToast("Profile updated successfully!");
-            } catch (err) { showToast(err.message, 'error'); }
+                showToast("MLBB details saved!");
+                closeModal('modal-mlbb-profile');
+            } catch (err) { showToast("Failed to save MLBB info.", 'error'); }
         });
 
         function renderPayments(paymentsObj) {
@@ -655,13 +944,13 @@
                 if(p.status === 'Refunded' || p.status === 'Refund Rejected') badgeClass = 'status-closed';
 
                 html += `
-                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--border);">
-                    <div style="display:flex; justify-content: space-between; margin-bottom:0.5rem;">
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 12px; margin-bottom: 0.8rem; border: 1px solid var(--border);">
+                    <div style="display:flex; justify-content: space-between; margin-bottom:0.5rem; align-items:center;">
                         <strong>Order: ${p.orderId}</strong>
-                        <span style="font-size:0.8rem; font-weight:bold;" class="${badgeClass} badge" style="position:static; display:inline-block; padding: 2px 8px;">${p.status}</span>
+                        <span style="font-size:0.75rem; font-weight:bold;" class="${badgeClass} badge" style="position:static; display:inline-block; padding: 3px 8px;">${p.status}</span>
                     </div>
                     <div style="font-size:0.85rem; color: var(--text-muted);">
-                        Tourney ID: ${p.tid}<br>
+                        Tourney ID: #${p.tid}<br>
                         Amount: ₹${p.amount} (${p.method})<br>
                         Date: ${p.date} ${p.time}
                     </div>
@@ -672,6 +961,7 @@
 
         // --- Active Registrations Handling ---
         function listenMyRegistrations() {
+            if (!currentUserUid) return;
             onValue(ref(db, 'registrations'), (snap) => {
                 myRegistrations = {};
                 if (snap.exists()) {
@@ -686,8 +976,16 @@
             });
         }
 
-        // --- Tournament Registration Submission with Auto-Filled WhatsApp Message ---
+        // --- Tournament Registration Submission with Auth Protection ---
         window.registerForTournament = async (tId, tid5, tName, customWaLink) => {
+            if (!currentUserUid) {
+                pendingRegistrationTarget = { tId, tid5, tName, customWaLink };
+                document.getElementById('auth-modal-title').innerText = "Account Required";
+                document.getElementById('auth-modal-desc').innerText = "Please create an account or log in before registering for a tournament.";
+                openModal('modal-auth-required');
+                return;
+            }
+
             try {
                 const userSnap = await get(ref(db, `users/${currentUserUid}`));
                 const userVal = userSnap.exists() ? userSnap.val() : {};
@@ -729,8 +1027,20 @@
                 }, 600);
 
             } catch (error) {
-                showToast(error.message, 'error');
+                showToast("Failed to initiate registration.", 'error');
             }
+        };
+
+        // --- Event Action Protection ---
+        window.handleEventAction = (link, reqAuth) => {
+            if (reqAuth && !currentUserUid) {
+                pendingEventTarget = link;
+                document.getElementById('auth-modal-title').innerText = "Account Required";
+                document.getElementById('auth-modal-desc').innerText = "Please create an account or log in to participate in this event.";
+                openModal('modal-auth-required');
+                return;
+            }
+            window.open(link, '_blank');
         };
 
         // --- Tournaments Handling ---
@@ -809,7 +1119,8 @@
                 renderTList();
             });
 
-            document.getElementById('search-tournaments').addEventListener('input', renderTList);
+            const searchEl = document.getElementById('search-tournaments');
+            if (searchEl) searchEl.addEventListener('input', renderTList);
         }
 
         // --- Events Handling ---
@@ -827,12 +1138,13 @@
                 
                 let html = '';
                 eData.forEach(e => {
+                    const isReqAuth = e.requiresAuth ? true : false;
                     html += `
                     <div class="card glass text-center">
                         <img src="${e.banner}" class="card-banner" alt="Event">
                         <h3 class="mb-1">${e.title}</h3>
                         <p class="text-muted mb-1">${e.desc}</p>
-                        <a href="${e.link}" target="_blank" class="btn btn-primary">${e.btnText || 'Learn More'}</a>
+                        <button onclick="handleEventAction('${e.link}', ${isReqAuth})" class="btn btn-primary">${e.btnText || 'Learn More'}</button>
                     </div>`;
                 });
                 container.innerHTML = html || '<p class="text-muted">No events currently active.</p>';
@@ -866,6 +1178,7 @@
         // --- Notifications Handling ---
         let unreadCount = 0;
         function listenNotifications() {
+            if (!currentUserUid) return;
             const renderNotifs = async () => {
                 const container = document.getElementById('notifications-list');
                 const badge = document.getElementById('notif-badge');
@@ -876,9 +1189,11 @@
                     globSnap.forEach(c => allNotifs.push({id: c.key, type: 'global', ...c.val()}));
                 }
 
-                const persSnap = await get(ref(db, `users/${currentUserUid}/notifications`));
-                if(persSnap.exists()) {
-                    persSnap.forEach(c => allNotifs.push({id: c.key, type: 'personal', ...c.val()}));
+                if (currentUserUid) {
+                    const persSnap = await get(ref(db, `users/${currentUserUid}/notifications`));
+                    if(persSnap.exists()) {
+                        persSnap.forEach(c => allNotifs.push({id: c.key, type: 'personal', ...c.val()}));
+                    }
                 }
 
                 allNotifs.sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -908,11 +1223,13 @@
 
             renderNotifs();
             onValue(ref(db, 'notifications/global'), renderNotifs);
-            onValue(ref(db, `users/${currentUserUid}/notifications`), renderNotifs);
+            if (currentUserUid) {
+                onValue(ref(db, `users/${currentUserUid}/notifications`), renderNotifs);
+            }
         }
 
         window.markNotificationsRead = async () => {
-            if(unreadCount === 0) return;
+            if(unreadCount === 0 || !currentUserUid) return;
             const persSnap = await get(ref(db, `users/${currentUserUid}/notifications`));
             if(persSnap.exists()) {
                 const updates = {};
